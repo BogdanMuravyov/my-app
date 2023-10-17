@@ -4,18 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use function Laravel\Prompts\password;
 
 class AuthController extends Controller
 {
+    protected UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function register(StorePostRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = $this->userService->store($request->validated());
 
         $token = $user->createToken('Token Name')->accessToken;
 
