@@ -20,11 +20,7 @@ class AuthController extends Controller
 
     public function register(StorePostRequest $request)
     {
-        $user = $this->userService->store([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'password'=>$request->password
-        ]);
+        $user = $this->userService->store($request->validated());
 
         $token = $user->createToken('Token Name')->accessToken;
 

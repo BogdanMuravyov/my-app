@@ -20,5 +20,6 @@ class CreateTest extends TestCase
         $data = ['email' => 'dsfsdf@gmail.com', 'password' => 'Seven','name' => 'wefwfewf'];
         $createdUser = $userService->store($data);
         $this->assertInstanceOf(User::class, $createdUser);
+        $this->assertDatabaseHas('users', ['email' => $data['email']]);
     }
 }

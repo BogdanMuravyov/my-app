@@ -6,16 +6,10 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class CreateTest extends TestCase
 {
-    use DatabaseMigrations;
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Artisan::call('passport:install');
-    }
-
     /**
      * test
      */
@@ -23,7 +17,7 @@ class CreateTest extends TestCase
     {
         $data = ['email' => 'goof@gmail.com', 'name' => 'san', 'password' => '12345678'];
 
-        $response = $this->json('POST', 'api/register', $data)->assertStatus(201);
+        $response = $this->json('POST', 'api/register', $data)->assertStatus(ResponseAlias::HTTP_CREATED);
 
         $response->assertJsonStructure([
             'success',
