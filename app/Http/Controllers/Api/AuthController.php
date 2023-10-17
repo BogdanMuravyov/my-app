@@ -32,17 +32,16 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-
         $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            $user = User::where('email', $credentials['email'])->first();
+
+            $token = $user->createToken('Token Name')->accessToken;
+
+            return response()->json(['status' => ResponseAlias::HTTP_OK, 'token' => $token], ResponseAlias::HTTP_OK);
         }
 
-        $user = User::where('email', $credentials['email'])->first();
-
-        $token = $user->createToken('Token Name')->accessToken;
-
-        return response()->json(['status' => ResponseAlias::HTTP_OK, 'token' => $token], ResponseAlias::HTTP_OK);
+        return response()->json(['message' => 'Wrong credentials'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
