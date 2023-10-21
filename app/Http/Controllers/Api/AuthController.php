@@ -9,28 +9,27 @@ use App\Http\Requests\SetPasswordRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Models\ResetPassword;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Laravel\Passport\Passport;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Mail\OrderShipped;
 
-
-
-
 class AuthController extends Controller
 {
     protected UserService $userService;
-    protected ResetPassword $rtPassword;
+    protected ResetPassword $resetPassword;
 
-    public function __construct(UserService $userService, ResetPassword $rtPassword)
+    public function __construct(UserService $userService, ResetPassword $resetPassword)
     {
         $this->userService = $userService;
-        $this->rtPassword = $rtPassword;
+        $this->resetPassword = $resetPassword;
     }
 
     public function register(StorePostRequest $request)
@@ -57,7 +56,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Wrong credentials'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
+    public function sendResetPasswordEmail(ResetPasswordRequest $request)
     {
         $email = $request->validated();
 
@@ -66,7 +65,7 @@ class AuthController extends Controller
         if ($user) {
             $token = Str::random(60);
 
-             $this->rtPassword->addResetToken($email['email'], $token);
+            $this->resetPassword->addResetToken($email['email'], $token);
 
             Mail::to($user->email)->send(new OrderShipped($token));
 
@@ -81,14 +80,20 @@ class AuthController extends Controller
     {
      $data = $request->validated();
 
-     $token = $this->rtPassword->findToken($data['token']);
+     $token = $this->resetPassword->findToken($data['token']);
+
+     if ($token['created_at']->addHours(2) < now()) {
+         $this->resetPassword->deleteToken($data['token']);
+
+         return response()->json(['message' => 'Expired token. Please generate a new token.'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+     }
 
      if ($token) {
          DB::table('users')
              ->where('email', $token->email)
              ->update(['password' => Hash::make($data['password'])]);
 
-         $this->rtPassword->deleteToken($data['token']);
+         $this->resetPassword->deleteToken($data['token']);
 
          return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your password has been changed'], ResponseAlias::HTTP_OK);
      }
