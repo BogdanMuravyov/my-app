@@ -82,7 +82,7 @@ class AuthController extends Controller
 
      $token = $this->resetPassword->findToken($data['token']);
 
-     if ($token['created_at']->addHours(2) < now()) {
+     if ($token && $token->created_at->addHours(2) < now()) {
          $this->resetPassword->deleteToken($data['token']);
 
          return response()->json(['message' => 'Expired token. Please generate a new token.'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
