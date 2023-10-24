@@ -10,20 +10,15 @@ class ResetPassword extends Model
 {
     use HasFactory;
 
-    public function addResetToken($email, $token)
+    public function addResetToken($user_id, $token)
     {
-        DB::table('password_reset_tokens')->insert([
-            ['email' => $email, 'token' => $token, 'created_at' => now()]
+        DB::table('reset_passwords')->insert([
+            ['user_id' => $user_id, 'token' => $token, 'created_at' => now()]
         ]);
-    }
-
-    public function findToken($data)
-    {
-       return DB::table('password_reset_tokens')->where('token', $data)->first();
     }
 
     public function deleteToken($data)
     {
-        DB::table('password_reset_tokens')->where('token', $data)->delete();
+        DB::table('reset_passwords')->where('token', $data)->delete();
     }
 }

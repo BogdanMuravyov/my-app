@@ -22,7 +22,7 @@ class SetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required|min:60',
+            'token' => 'required|min:60|exists:reset_passwords',
             'password' => 'required'
         ];
     }

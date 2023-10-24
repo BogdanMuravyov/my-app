@@ -58,14 +58,14 @@ class AuthController extends Controller
 
     public function sendResetPasswordEmail(ResetPasswordRequest $request)
     {
-        $email = $request->validated();
+        $data = $request->validated();
 
-        $user = User::where('email', $email['email'])->first();
+        $user = User::where('email', $data['email'])->first();
 
         if ($user) {
             $token = Str::random(60);
 
-            $this->resetPassword->addResetToken($email['email'], $token);
+            $this->resetPassword->addResetToken($user->id, $token);
 
             Mail::to($user->email)->send(new OrderShipped($token));
 
@@ -80,20 +80,20 @@ class AuthController extends Controller
     {
      $data = $request->validated();
 
-     $token = $this->resetPassword->findToken($data['token']);
+     $token = ResetPassword::where('token', $data['token'])->first();
 
-     if ($token && $token->created_at->addHours(2) < now()) {
-         $this->resetPassword->deleteToken($data['token']);
+     if ($token && Carbon::parse($token->created_at)->addHours(2) < now()) {
+         ResetPassword::where('token', $data['token'])->delete();
 
          return response()->json(['message' => 'Expired token. Please generate a new token.'], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
      }
 
      if ($token) {
          DB::table('users')
-             ->where('email', $token->email)
+             ->where('id', $token->user_id)
              ->update(['password' => Hash::make($data['password'])]);
 
-         $this->resetPassword->deleteToken($data['token']);
+         ResetPassword::where('token', $data['token'])->delete();
 
          return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your password has been changed'], ResponseAlias::HTTP_OK);
      }
