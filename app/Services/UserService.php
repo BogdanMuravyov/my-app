@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserService
 {
     public function store(array $data): User
@@ -11,4 +12,5 @@ class UserService
         $data['password'] = Hash::make($data['password']);
         return User::create($data);
     }
+
 }
