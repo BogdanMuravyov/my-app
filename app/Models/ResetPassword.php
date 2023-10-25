@@ -16,9 +16,4 @@ class ResetPassword extends Model
             ['user_id' => $user_id, 'token' => $token, 'created_at' => now()]
         ]);
     }
-
-    public function deleteToken($data)
-    {
-        DB::table('reset_passwords')->where('token', $data)->delete();
-    }
 }
