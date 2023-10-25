@@ -23,6 +23,6 @@ Route::post('register', [AuthController::class, 'register']);
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::post('reset_password', [AuthController::class, 'sendResetPasswordEmail'])->name('password.reset');
+Route::post('reset-password', [AuthController::class, 'sendResetPasswordEmail'])->name('password.reset');
 
-Route::post('set_password', [AuthController::class, 'setNewPassword']);
+Route::post('set-password', [AuthController::class, 'setNewPassword']);

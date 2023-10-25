@@ -10,10 +10,7 @@ class ResetPassword extends Model
 {
     use HasFactory;
 
-    public function addResetToken($user_id, $token)
-    {
-        DB::table('reset_passwords')->insert([
-            ['user_id' => $user_id, 'token' => $token, 'created_at' => now()]
-        ]);
-    }
+    protected $fillable = [
+        'user_id'
+    ];
 }

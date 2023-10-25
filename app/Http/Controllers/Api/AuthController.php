@@ -65,7 +65,7 @@ class AuthController extends Controller
         if ($user) {
             $token = Str::random(60);
 
-            $this->resetPassword->addResetToken($user->id, $token);
+            ResetPassword::insert(['user_id' => $user->id, 'token' => $token, 'created_at' => now()]);
 
             Mail::to($user->email)->send(new OrderShipped($token));
 
