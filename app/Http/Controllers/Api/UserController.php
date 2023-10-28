@@ -22,14 +22,8 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $authUser = auth()->user();
-
-        if ($authUser->can('update', $user)) {
             $this->userService->updateUser($data, $user);
 
             return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your data has been changed'], ResponseAlias::HTTP_OK);
-        }
-
-        return response()->json(['status' => ResponseAlias::HTTP_FORBIDDEN, 'message' => 'You are not authorized to update this user'], ResponseAlias::HTTP_FORBIDDEN);
     }
 }

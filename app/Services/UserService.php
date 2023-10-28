@@ -16,15 +16,15 @@ class UserService
     public function updateUser(array $data, $user): void
     {
         if (!empty($data['password'])) {
-            $user->update(['password' => Hash::make($data['password'])]);
+            $data['password'] = Hash::make($data['password']);
         }
 
-        if (!empty($data['email'])) {
-            $user->update(['email' => $data['email']]);
-        }
+        $updateData = array_filter($data, function ($value) {
+            return !empty($value);
+        });
 
-        if (!empty($data['name'])) {
-            $user->update(['name' => $data['name']]);
+        if (!empty($updateData)) {
+            $user->update($updateData);
         }
     }
 }

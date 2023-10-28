@@ -11,7 +11,10 @@ class UpdateUserDateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $user = $this->route('user');
+        $currentUser = auth()->user();
+
+        return $user->id == $currentUser->id;
     }
 
     /**
