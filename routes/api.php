@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('reset-password', [AuthController::class, 'sendResetPasswordEmail'])->name('password.reset');
 
 Route::post('set-password', [AuthController::class, 'setNewPassword']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('/users/{user}', [UserController::class, 'updateUserData']);
+});

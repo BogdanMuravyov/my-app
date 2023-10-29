@@ -13,4 +13,12 @@ class UserService
         return User::create($data);
     }
 
+    public function updateUser(array $data, $user): void
+    {
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($data);
+    }
 }
