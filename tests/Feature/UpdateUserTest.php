@@ -20,7 +20,7 @@ class UpdateUserTest extends TestCase
 
         $this->actingAs($user, 'api');
 
-        $data = ['email' => 'Jhon@gmail.com', 'name' => 'Jhonsen'];
+        $data = ['email' => 'Jhon@gmail.com', 'name' => 'Jhonsen', 'password' => 'popopow'];
 
         $this->json('POST', 'api/users/1', $data)->assertStatus(ResponseAlias::HTTP_OK);
 

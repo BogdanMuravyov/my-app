@@ -26,4 +26,22 @@ class UserController extends Controller
 
         return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your data has been changed'], ResponseAlias::HTTP_OK);
     }
+
+    public function getAllUsersArray()
+    {
+        $collection = User::pluck('email')->toArray();
+
+        return response()->json(['users' => $collection]);
+    }
+
+    public function getOneAuthUserArray(User $id)
+    {
+        $user = User::find($id);
+
+        $this->authorize('view', $id);
+
+        $userData = $user->pluck('email')->toArray();
+
+        return response()->json(['user' => $userData]);
+    }
 }
