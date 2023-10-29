@@ -19,12 +19,6 @@ class UserService
             $data['password'] = Hash::make($data['password']);
         }
 
-        $updateData = array_filter($data, function ($value) {
-            return !empty($value);
-        });
-
-        if (!empty($updateData)) {
-            $user->update($updateData);
-        }
+        $user->update($data);
     }
 }

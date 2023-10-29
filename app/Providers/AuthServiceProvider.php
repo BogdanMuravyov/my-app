@@ -25,8 +25,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
 
-        Gate::define('update', [UserPolicy::class, 'update']);
     }
 }

@@ -22,8 +22,8 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-            $this->userService->updateUser($data, $user);
+        $this->userService->updateUser($data, $user);
 
-            return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your data has been changed'], ResponseAlias::HTTP_OK);
+        return response()->json(['status' => ResponseAlias::HTTP_OK, 'message' => 'Your data has been changed'], ResponseAlias::HTTP_OK);
     }
 }

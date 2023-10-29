@@ -11,10 +11,7 @@ class UpdateUserDateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->route('user');
-        $currentUser = auth()->user();
-
-        return $user->id == $currentUser->id;
+        return auth()->user()->id === $this->route('user')->id;
     }
 
     /**
@@ -25,9 +22,9 @@ class UpdateUserDateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|nullable',
-            'email' => 'email|nullable',
-            'password' => 'string|nullable'
+            'name' => 'string|required|min:5|max:255',
+            'email' => 'email|required|min:5|max:255',
+            'password' => 'string|required|min:5|max:255'
         ];
     }
 }
