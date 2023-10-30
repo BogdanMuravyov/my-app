@@ -28,6 +28,12 @@ Route::post('reset-password', [AuthController::class, 'sendResetPasswordEmail'])
 
 Route::post('set-password', [AuthController::class, 'setNewPassword']);
 
+
+
 Route::middleware('auth:api')->group(function () {
-    Route::post('/users/{user}', [UserController::class, 'updateUserData']);
+    Route::put('/users/{user}', [UserController::class, 'updateUserData']);
+
+    Route::get('/users', [UserController::class, 'index']);
+
+    Route::put('/users/{user}', [UserController::class, 'view']);
 });
