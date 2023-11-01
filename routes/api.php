@@ -36,4 +36,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 
     Route::get('/users/{user}', [UserController::class, 'view']);
+
+    Route::delete('/users/{user}', [UserController::class, 'delete']);
 });
